@@ -30,7 +30,21 @@ if (!html.includes(TAG)) {
 }
 // </script> inside the data payload would terminate the inline tag early
 const safe = dataJs.replace(/<\//g, '<\\/');
-const bundled = html.replace(TAG, '<script>\n' + safe + '\n</script>');
+let bundled = html.replace(TAG, '<script>\n' + safe + '\n</script>');
+
+// Inline local font files (Gilroy woff2) as data URIs so the bundle stays
+// one self-contained file. Missing font files degrade to the CSS fallback
+// stack rather than failing the build.
+bundled = bundled.replace(/url\('(fonts\/[^']+\.woff2)'\)/g, (match, rel) => {
+  const fontPath = path.join(ROOT, rel);
+  try {
+    const b64 = fs.readFileSync(fontPath).toString('base64');
+    return `url('data:font/woff2;base64,${b64}')`;
+  } catch {
+    console.warn(`  (font ${rel} not found — bundle will use fallback fonts)`);
+    return match;
+  }
+});
 
 fs.mkdirSync(path.join(ROOT, 'dist'), { recursive: true });
 const out = path.join(ROOT, 'dist', 'mission-control.html');
