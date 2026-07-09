@@ -35,6 +35,12 @@ fatal.
 
 Manual rebuild without re-probing: `node scripts/build-data.js && node scripts/screenshot.js`.
 
+**Data privacy:** `data/sources/`, `data/dashboard-data.js`, `screenshots/`, and
+`dist/` are gitignored — they hold customer financials, email content, and visitor
+PII and are never pushed. The repo carries only code; refreshed dashboards are
+delivered as a self-contained `dist/mission-control.html` (built by
+`scripts/bundle.js`).
+
 ## Brand
 
 Fiction Tribe dark theme: FT purple `#4C00FF`, Gilroy (falls back to Poppins /

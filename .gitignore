@@ -1,0 +1,7 @@
+# Live business data (financials, email, visitor intel) stays out of git.
+# The refresh-dashboard skill regenerates these locally; the page renders
+# offline cards when they're absent.
+data/sources/
+data/dashboard-data.js
+screenshots/
+dist/

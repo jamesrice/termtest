@@ -79,23 +79,26 @@ lists only source names whose data supports the action. Offline sources get no
 actions, but note significant outages in the summary. Mention overdue AR, stalled
 deals, unanswered action-needed email, and meeting commitments coming due.
 
-## Step 3 — Rebuild, verify, screenshot
+## Step 3 — Rebuild, verify, screenshot, bundle
 
 ```bash
 node scripts/build-data.js     # composes data/dashboard-data.js; prints per-source status
 node scripts/screenshot.js    # captures screenshots/*.png; exits 1 on any page JS error
+node scripts/bundle.js        # dist/mission-control.html — self-contained hand-off file
 ```
 
 `build-data.js` never throws — missing/corrupt files become offline envelopes.
-`screenshot.js` failing means the page is broken: fix before pushing (a malformed
+`screenshot.js` failing means the page is broken: fix before delivering (a malformed
 envelope is the usual cause; check the newest source files).
 
-## Step 4 — Commit and push
+## Step 4 — Deliver (DATA STAYS OUT OF GIT)
 
-```bash
-git add data/ screenshots/ && git commit -m "Morning refresh: <date>, <N>/9 sources online" && git push -u origin <current branch>
-```
+`data/sources/`, `data/dashboard-data.js`, `screenshots/`, and `dist/` are
+gitignored ON PURPOSE: they contain customer financials, email content, and
+visitor PII, and the user has not authorized publishing that data to GitHub.
+Do NOT commit or push them, and do not "fix" the .gitignore. Commit and push
+only code changes (index.html, scripts/, this skill), if any.
 
-Then reply to the user with: sources online/offline (and why, for offline), the
-briefing's top 3 actions, and the full-dashboard screenshot
-(send `screenshots/dashboard-full.png` via SendUserFile).
+Deliver results directly instead: send `dist/mission-control.html` and
+`screenshots/dashboard-full.png` via SendUserFile, and reply with sources
+online/offline (and why, for offline) plus the briefing's top 3 actions.
