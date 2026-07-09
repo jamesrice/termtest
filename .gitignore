@@ -1,7 +1,7 @@
-# Live business data (financials, email, visitor intel) stays out of git.
-# The refresh-dashboard skill regenerates these locally; the page renders
-# offline cards when they're absent.
+# This PUBLIC repo carries code only. Live dashboard data, screenshots, and
+# bundles live in the PRIVATE jamesrice/mission-control repo — never here.
 data/sources/
 data/dashboard-data.js
 screenshots/
 dist/
+node_modules/

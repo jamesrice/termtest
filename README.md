@@ -35,11 +35,12 @@ fatal.
 
 Manual rebuild without re-probing: `node scripts/build-data.js && node scripts/screenshot.js`.
 
-**Data privacy:** `data/sources/`, `data/dashboard-data.js`, `screenshots/`, and
-`dist/` are gitignored — they hold customer financials, email content, and visitor
-PII and are never pushed. The repo carries only code; refreshed dashboards are
-delivered as a self-contained `dist/mission-control.html` (built by
-`scripts/bundle.js`).
+**Data access & security:** this repo is PUBLIC and carries code only. The live
+board — including `data/`, `screenshots/`, and the self-contained
+`dist/mission-control.html` — lives in the **private** `jamesrice/mission-control`
+repo (owner-authorized 2026-07-09), accessible anywhere behind GitHub
+authentication. Never commit data files here, never enable GitHub Pages on the
+private repo (Pages is public on non-Enterprise plans).
 
 ## Brand
 

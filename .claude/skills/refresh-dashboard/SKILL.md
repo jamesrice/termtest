@@ -91,14 +91,22 @@ node scripts/bundle.js        # dist/mission-control.html — self-contained han
 `screenshot.js` failing means the page is broken: fix before delivering (a malformed
 envelope is the usual cause; check the newest source files).
 
-## Step 4 — Deliver (DATA STAYS OUT OF GIT)
+## Step 4 — Commit, push, deliver
 
-`data/sources/`, `data/dashboard-data.js`, `screenshots/`, and `dist/` are
-gitignored ON PURPOSE: they contain customer financials, email content, and
-visitor PII, and the user has not authorized publishing that data to GitHub.
-Do NOT commit or push them, and do not "fix" the .gitignore. Commit and push
-only code changes (index.html, scripts/, this skill), if any.
+Run the refresh in /workspace/mission-control (the PRIVATE jamesrice/mission-control
+repo) — that repo is the authorized home for dashboard data (owner authorization
+2026-07-09):
 
-Deliver results directly instead: send `dist/mission-control.html` and
-`screenshots/dashboard-full.png` via SendUserFile, and reply with sources
-online/offline (and why, for offline) plus the briefing's top 3 actions.
+```bash
+cd /workspace/mission-control && git add -A && git commit -m "Morning refresh: <date>, <N>/9 sources online" && git push -u origin main
+```
+
+SECURITY INVARIANTS — check, don't assume: the data authorization covers ONLY the
+private jamesrice/mission-control repo. Before every data push, verify it is still
+private (GitHub API `visibility` field, or an unauthenticated fetch that fails);
+if it has become public, STOP and tell the user instead of pushing. This repo
+(jamesrice/termtest) is PUBLIC: code changes only, never data/screenshots/dist.
+
+Then send `dist/mission-control.html` and `screenshots/dashboard-full.png` via
+SendUserFile, and reply with sources online/offline (and why, for offline) plus
+the briefing's top 3 actions.
