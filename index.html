@@ -86,11 +86,11 @@
   .masthead h1 { font-size: 28px; font-weight: 700; }
   .masthead .sub {
     font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--ft-gray-200);
+    text-transform: uppercase; color: var(--ft-gray-300);
   }
   .head-meta { margin-left: auto; text-align: right; }
   .head-meta .date { font-size: 17px; font-weight: 700; }
-  .head-meta .gen { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-200); }
+  .head-meta .gen { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-300); }
   .sources-pill {
     display: inline-flex; align-items: center; gap: 8px;
     border: 3px solid var(--ft-black); border-radius: var(--ft-radius-pill);
@@ -100,7 +100,7 @@
   .sources-pill:hover { border-color: var(--ft-purple); color: var(--ft-purple); }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
   .dot.on  { background: var(--ft-purple); box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.18); }
-  .dot.off { background: var(--ft-gray-100); }
+  .dot.off { background: var(--ft-gray-300); }
 
   /* ── Grid & panels ────────────────────────────────────────────────── */
   .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--ft-grid-gap); }
@@ -126,18 +126,18 @@
     border-bottom: 1px solid var(--stroke-soft);
   }
   .panel-head h2 { font-size: 19px; font-weight: 700; }
-  .panel-head .src { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-100); }
+  .panel-head .src { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-300); }
   .panel-head .status { margin-left: auto; display: flex; align-items: center; gap: 6px;
     font-family: var(--ft-font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
   .status.on  { color: var(--ft-purple); }
-  .status.off { color: var(--ft-gray-200); }
+  .status.off { color: var(--ft-gray-300); }
 
   .offline-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 20px 10px; }
   .offline-body .big {
     font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.18em;
-    color: var(--ft-gray-100); font-weight: 700;
+    color: var(--ft-gray-300); font-weight: 700;
   }
-  .offline-body .why { font-size: 14px; color: var(--ft-gray-200); margin-top: 8px; max-width: 380px; }
+  .offline-body .why { font-size: 14px; color: var(--ft-gray-300); margin-top: 8px; max-width: 380px; }
 
   /* ── Briefing ─────────────────────────────────────────────────────── */
   .brief-headline { font-size: clamp(25px, calc(20px + 1.25vw), 40px); font-weight: 700; line-height: 1.15; margin-bottom: 10px; max-width: 1100px; text-wrap: balance; }
@@ -170,7 +170,7 @@
   .watchlist { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--stroke-color); }
   .watchlist .wl-label {
     font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--ft-gray-200); margin-bottom: 8px;
+    text-transform: uppercase; color: var(--ft-gray-300); margin-bottom: 8px;
   }
   .watchlist li { color: var(--ft-gray-300); font-size: 14.5px; margin: 5px 0 5px 20px; }
 
@@ -184,7 +184,7 @@
   .row .when { font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-purple); flex: none; width: 88px; }
   .row .main { flex: 1; min-width: 0; }
   .row .t { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .row .d { font-size: 13.5px; color: var(--ft-gray-200); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .d { font-size: 13.5px; color: var(--ft-gray-300); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .row .d.wrap { white-space: normal; }
   .row .end { flex: none; font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-gray-300); }
   .flag {
@@ -196,7 +196,7 @@
 
   .day-label {
     font-family: var(--ft-font-mono); font-size: 11px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--ft-gray-200); margin: 12px 0 4px;
+    text-transform: uppercase; color: var(--ft-gray-300); margin: 12px 0 4px;
   }
   .day-label:first-child { margin-top: 0; }
 
@@ -207,7 +207,7 @@
   .kpi .v.good { color: var(--ft-purple); } .kpi .v.warn { color: var(--ft-orange); } .kpi .v.crit { color: var(--ft-red); }
   .kpi .k {
     font-family: var(--ft-font-mono); font-size: 10.5px; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--ft-gray-200); margin-top: 3px;
+    text-transform: uppercase; color: var(--ft-gray-300); margin-top: 3px;
   }
 
   /* ── Bars (charts) — direct-labeled, purple identity ─────────────── */
@@ -225,12 +225,12 @@
     display: flex; flex-wrap: wrap; gap: 12px 26px; align-items: center;
   }
   .status-item { display: flex; align-items: center; gap: 7px; font-family: var(--ft-font-mono); font-size: 12px; color: rgba(255,255,255,0.85); }
-  .status-item .fetched { color: rgba(255,255,255,0.45); }
+  .status-item .fetched { color: rgba(255,255,255,0.62); }
   .status-item .dot.on { background: var(--ft-purple-soft); box-shadow: 0 0 0 3px rgba(138,111,255,0.25); }
   .status-item .dot.off { background: rgba(255,255,255,0.3); }
   .strip-label {
     font-family: var(--ft-font-mono); font-size: 11px; letter-spacing: 0.18em;
-    text-transform: uppercase; color: rgba(255,255,255,0.5); margin-right: 6px;
+    text-transform: uppercase; color: rgba(255,255,255,0.66); margin-right: 6px;
   }
   .strip-tag {
     margin-left: auto; font-weight: 700; font-size: 15px; letter-spacing: -0.01em;
@@ -434,7 +434,7 @@
         <div class="bar-track"><div class="bar-fill" style="width:${Math.max(3, Math.round((num(x.amount) ?? 0) / max * 100))}%"></div></div>
         <span class="bv">${money(x.amount)}</span>
       </div>
-      <div class="d" style="font-size:11px;color:var(--ft-gray-100);margin:-3px 0 4px 2px">${esc(x.stage)}${x.close_date ? ' · closes ' + shortDate(x.close_date) : ''}</div>`).join('');
+      <div class="d" style="font-size:11px;color:var(--ft-gray-300);margin:-3px 0 4px 2px">${esc(x.stage)}${x.close_date ? ' · closes ' + shortDate(x.close_date) : ''}</div>`).join('');
     return kpis + rows;
   };
 
