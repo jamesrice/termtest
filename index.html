@@ -48,6 +48,7 @@
     --stroke-soft: rgba(19, 19, 19, 0.10);
     --input-bg: rgba(19, 19, 19, 0.06);
 
+    --ft-card-padding: 32px;
     --ft-radius-pill: 100px;
     --ft-radius-lg: 20px;
     --ft-radius-md: 12px;
@@ -109,7 +110,7 @@
     background: var(--panel-color);
     border: 1px solid var(--stroke-soft);
     border-radius: var(--ft-radius-lg);
-    padding: 26px 28px;
+    padding: var(--ft-card-padding);
     display: flex; flex-direction: column;
     min-height: 180px;
   }
@@ -141,7 +142,7 @@
 
   /* ── Briefing ─────────────────────────────────────────────────────── */
   .brief-headline { font-size: clamp(25px, calc(20px + 1.25vw), 40px); font-weight: 700; line-height: 1.15; margin-bottom: 10px; max-width: 1100px; text-wrap: balance; }
-  .brief-summary  { color: var(--ft-gray-300); font-size: 17px; max-width: 980px; margin-bottom: 22px; }
+  .brief-summary  { color: var(--ft-gray-300); font-size: 17px; max-width: 72ch; margin-bottom: 22px; text-wrap: pretty; }
   .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: var(--ft-grid-gap); }
   .action {
     border: 1px solid var(--stroke-soft); border-left: 4px solid var(--ft-purple);
@@ -158,7 +159,7 @@
   .action.p1 .pnum { color: var(--ft-red); border-color: var(--ft-red); }
   .action.p2 .pnum { color: var(--ft-orange); border-color: var(--ft-orange); }
   .action-title { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
-  .action-why { color: var(--ft-gray-300); font-size: 14.5px; margin-bottom: 10px; }
+  .action-why { color: var(--ft-gray-300); font-size: 14.5px; margin-bottom: 10px; text-wrap: pretty; }
   .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .chip {
     font-family: var(--ft-font-mono); font-size: 11px;
@@ -172,7 +173,7 @@
     font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.14em;
     text-transform: uppercase; color: var(--ft-gray-300); margin-bottom: 8px;
   }
-  .watchlist li { color: var(--ft-gray-300); font-size: 14.5px; margin: 5px 0 5px 20px; }
+  .watchlist li { color: var(--ft-gray-300); font-size: 14.5px; margin: 5px 0 5px 20px; max-width: 100ch; text-wrap: pretty; }
 
   /* ── Shared list rows ─────────────────────────────────────────────── */
   .rows { display: flex; flex-direction: column; }
@@ -181,6 +182,8 @@
     padding: 9px 2px; border-bottom: 1px solid var(--stroke-soft);
   }
   .row:last-child { border-bottom: none; }
+  .row { transition: background var(--ft-speed) ease; border-radius: 6px; }
+  .row:hover { background: var(--input-bg); }
   .row .when { font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-purple); flex: none; width: 88px; }
   .row .main { flex: 1; min-width: 0; }
   .row .t { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -260,7 +263,7 @@
 <div class="wrap">
   <header>
     <div class="logo" title="Fiction Tribe">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 67" fill="none" aria-label="Fiction Tribe">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 67" fill="none" role="img" aria-label="Fiction Tribe">
         <g fill="currentColor">
           <path opacity="0.55" d="M31.939 42.5853L21.286 36.5151L31.939 30.4136L42.5892 36.5094L31.939 42.5882"/>
           <path opacity="0.55" d="M42.5892 12.1831L31.9419 6.0873L21.286 0L10.6359 6.10432L21.286 12.1916L31.9419 18.2874L42.5892 24.3832L53.2365 18.2818L42.5892 12.1831Z"/>
