@@ -42,7 +42,7 @@ function loadPlaywright() {
   });
 
   await page.goto('file://' + path.join(ROOT, 'index.html'), { waitUntil: 'networkidle' });
-  await page.waitForTimeout(700); // let fonts settle
+  await page.waitForTimeout(2200); // let fonts + arrival choreography settle
 
   await page.screenshot({ path: path.join(OUT, 'dashboard-full.png'), fullPage: true });
   console.log('  saved dashboard-full.png');

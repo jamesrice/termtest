@@ -244,6 +244,22 @@
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
 
+  /* ── Living Board: data-arrival choreography (brand reveal ease) ──── */
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .panel { animation: rise-in 0.55s cubic-bezier(0.13, 0.6, 0.23, 0.98) both; animation-delay: var(--d, 0ms); }
+  .action { animation: rise-in 0.5s cubic-bezier(0.13, 0.6, 0.23, 0.98) both; animation-delay: var(--d, 0ms); }
+  .brief-headline { animation: rise-in 0.6s cubic-bezier(0.13, 0.6, 0.23, 0.98) 80ms both; }
+  .brief-summary  { animation: rise-in 0.6s cubic-bezier(0.13, 0.6, 0.23, 0.98) 160ms both; }
+  @keyframes dot-breathe {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.18); }
+    50%      { box-shadow: 0 0 0 7px rgba(76, 0, 255, 0.06); }
+  }
+  .panel-head .dot.on, .sources-pill .dot.on { animation: dot-breathe 2.6s ease-in-out infinite; }
+  .bar-fill { transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+
   .fatal {
     margin: 60px auto; max-width: 560px; text-align: center;
     border: 1px solid var(--stroke-color); border-radius: var(--ft-radius-lg);
@@ -256,7 +272,7 @@
   a { color: var(--ft-purple); text-decoration: none; transition: color var(--ft-speed) ease; }
   a:hover { color: var(--ft-purple-deep); text-decoration: underline; }
   :focus-visible { outline: 2px solid var(--ft-purple); outline-offset: 2px; }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
 <body>
@@ -340,7 +356,7 @@
       const p = num(a.priority) ?? (i + 1);
       const cls = p === 1 ? 'p1' : p === 2 ? 'p2' : '';
       const chips = arr(a.sources).map((s) => `<span class="chip">${esc(s)}</span>`).join('');
-      return `<div class="action ${cls}">
+      return `<div class="action ${cls}" style="--d:${220 + i * 60}ms">
         <div class="action-top"><span class="pnum">P${p}</span><span class="action-title">${esc(a.title)}</span></div>
         <div class="action-why">${esc(a.why)}${a.due ? ` <strong>Due: ${esc(a.due)}.</strong>` : ''}</div>
         <div class="chips">${chips}</div>
@@ -415,7 +431,7 @@
           <div class="d">${esc([o.industry, signals].filter(Boolean).join(' — '))}</div>
         </div>
         <div style="flex:none;width:110px" title="${v} sessions">
-          <div class="bar-track"><div class="bar-fill" style="width:${Math.max(3, Math.round(v / max * 100))}%"></div></div>
+          <div class="bar-track"><div class="bar-fill" data-w="${Math.max(3, Math.round(v / max * 100))}%" style="width:2px"></div></div>
         </div>
         <span class="end">${shortDate(o.last_visit)}</span>
       </div>`;
@@ -425,16 +441,16 @@
   R.hubspot = (d) => {
     const deals = arr(d.deals);
     const kpis = `<div class="kpis">
-      <div class="kpi"><div class="v">${num(d.open_deal_count) ?? deals.length}</div><div class="k">Open deals</div></div>
-      <div class="kpi"><div class="v good">${money(d.pipeline_value)}</div><div class="k">Pipeline value</div></div>
-      ${num(d.contact_count) !== null ? `<div class="kpi"><div class="v">${d.contact_count.toLocaleString('en-US')}</div><div class="k">CRM contacts</div></div>` : ''}
+      <div class="kpi"><div class="v" data-count="${num(d.open_deal_count) ?? deals.length}" data-fmt="int">${num(d.open_deal_count) ?? deals.length}</div><div class="k">Open deals</div></div>
+      <div class="kpi"><div class="v good" ${num(d.pipeline_value) !== null ? `data-count="${d.pipeline_value}" data-fmt="money"` : ''}>${money(d.pipeline_value)}</div><div class="k">Pipeline value</div></div>
+      ${num(d.contact_count) !== null ? `<div class="kpi"><div class="v" data-count="${d.contact_count}" data-fmt="int">${d.contact_count.toLocaleString('en-US')}</div><div class="k">CRM contacts</div></div>` : ''}
     </div>`;
     if (!deals.length) return kpis + `<div class="offline-body"><div class="why">${esc(d.note || 'No open deals returned.')}</div></div>`;
     const max = Math.max(1, ...deals.map((x) => num(x.amount) ?? 0));
     const rows = deals.slice(0, 10).map((x) => `
       <div class="bar-row" title="${esc(x.stage)}">
         <span class="bl">${esc(x.name)}</span>
-        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(3, Math.round((num(x.amount) ?? 0) / max * 100))}%"></div></div>
+        <div class="bar-track"><div class="bar-fill" data-w="${Math.max(3, Math.round((num(x.amount) ?? 0) / max * 100))}%" style="width:2px"></div></div>
         <span class="bv">${money(x.amount)}</span>
       </div>
       <div class="d" style="font-size:11px;color:var(--ft-gray-300);margin:-3px 0 4px 2px">${esc(x.stage)}${x.close_date ? ' · closes ' + shortDate(x.close_date) : ''}</div>`).join('');
@@ -447,9 +463,9 @@
     if (p && typeof p === 'object') {
       const net = num(p.net);
       html += `<div class="kpis">
-        <div class="kpi"><div class="v">${money(p.income)}</div><div class="k">Income · ${esc(p.period || '')}</div></div>
-        <div class="kpi"><div class="v">${money(p.expenses)}</div><div class="k">Expenses</div></div>
-        <div class="kpi"><div class="v ${net === null ? '' : net >= 0 ? 'good' : 'crit'}">${money(p.net)}</div><div class="k">Net</div></div>
+        <div class="kpi"><div class="v" ${num(p.income) !== null ? `data-count="${p.income}" data-fmt="money"` : ''}>${money(p.income)}</div><div class="k">Income · ${esc(p.period || '')}</div></div>
+        <div class="kpi"><div class="v" ${num(p.expenses) !== null ? `data-count="${p.expenses}" data-fmt="money"` : ''}>${money(p.expenses)}</div><div class="k">Expenses</div></div>
+        <div class="kpi"><div class="v ${net === null ? '' : net >= 0 ? 'good' : 'crit'}" ${net !== null ? `data-count="${net}" data-fmt="money"` : ''}>${money(p.net)}</div><div class="k">Net</div></div>
       </div>`;
     }
     const ar = d.ar_aging;
@@ -463,7 +479,7 @@
         buckets.map(([l, v, cls]) => `
           <div class="bar-row">
             <span class="bl">${l}</span>
-            <div class="bar-track"><div class="bar-fill ${cls}" style="width:${Math.max(2, Math.round((num(v) ?? 0) / max * 100))}%"></div></div>
+            <div class="bar-track"><div class="bar-fill ${cls}" data-w="${Math.max(2, Math.round((num(v) ?? 0) / max * 100))}%" style="width:2px"></div></div>
             <span class="bv">${money(v)}</span>
           </div>`).join('');
     }
@@ -516,7 +532,7 @@
                  snitcher: 'span-6', hubspot: 'span-6', quickbooks: 'span-6', apollo: 'span-4', drive: 'span-8' };
   const ORDER = ['briefing', 'calendar', 'gmail', 'tactiq', 'snitcher', 'hubspot', 'quickbooks', 'apollo', 'drive'];
 
-  function panelHTML(env) {
+  function panelHTML(env, idx) {
     const on = env.status === 'online';
     let body;
     if (on) {
@@ -532,7 +548,7 @@
         <div class="why">${esc(env.error || 'No data available.')}</div>
       </div>`;
     }
-    return `<section class="panel ${SPAN[env.source] || 'span-4'}" data-panel="${esc(env.source)}">
+    return `<section class="panel ${SPAN[env.source] || 'span-4'}" data-panel="${esc(env.source)}" style="--d:${idx * 70}ms">
       <div class="panel-head">
         <h2>${esc(env.label)}</h2><span class="src">${esc(env.source)}</span>
         <span class="status ${on ? 'on' : 'off'}"><span class="dot ${on ? 'on' : 'off'}"></span>${on ? 'Live' : 'Offline'}</span>
@@ -570,6 +586,32 @@
     `<span class="dot ${onCount ? 'on' : 'off'}"></span><span>${onCount}/${envs.length} sources live</span>`;
 
   board.innerHTML = envs.map(panelHTML).join('');
+
+  // Living Board: fill bars and count up KPIs after paint. Failures here must
+  // never break the board — everything lands on final values regardless.
+  try {
+    const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bars = document.querySelectorAll('.bar-fill[data-w]');
+    if (still) {
+      bars.forEach((el) => { el.style.transition = 'none'; el.style.width = el.dataset.w; });
+    } else {
+      requestAnimationFrame(() => requestAnimationFrame(() =>
+        bars.forEach((el, i) => { el.style.transitionDelay = `${300 + i * 45}ms`; el.style.width = el.dataset.w; })));
+    }
+    document.querySelectorAll('.kpi .v[data-count]').forEach((el) => {
+      const target = Number(el.dataset.count);
+      if (!isFinite(target)) return;
+      const fmt = el.dataset.fmt === 'money' ? money : (n) => Math.round(n).toLocaleString('en-US');
+      if (still) { el.textContent = fmt(target); return; }
+      const t0 = performance.now(), dur = 750;
+      const tick = (t) => {
+        const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(target * e);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  } catch (e) { /* motion is optional; data is not */ }
 
   document.getElementById('status-strip').innerHTML =
     `<span class="strip-label">Source telemetry</span>` +
