@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiction Tribe — Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Fiction Tribe brand system (ft-brand-skill) ─────────────────────
+     Light beige theme (brand default). Footer is always dark.
+     Gilroy 400/500/700 only; Space Mono for labels/tags. */
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Regular.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Medium.woff2') format('woff2');
+    font-weight: 500; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Gilroy';
+    src: url('fonts/Gilroy-Bold.woff2') format('woff2');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    /* brand tokens (css/tokens.css) */
+    --ft-black: #131313;
+    --ft-beige: #FEF7ED;
+    --ft-purple: #4C00FF;
+    --ft-purple-deep: #4605DE;
+    --ft-purple-soft: #8A6FFF;
+    --ft-gradient: linear-gradient(135deg, #F24A3D 0%, #F9B8C2 100%);
+    --ft-aqua: #278DD8;
+    --ft-orange: #D99A01;
+    --ft-red: #FF562F;
+    --ft-gray-100: #a4a4a4;
+    --ft-gray-200: #848484;
+    --ft-gray-300: #5A5A5A;
+
+    --bg-color: var(--ft-beige);
+    --font-color: var(--ft-black);
+    --panel-color: #fff;
+    --stroke-color: rgba(19, 19, 19, 0.18);
+    --stroke-soft: rgba(19, 19, 19, 0.10);
+    --input-bg: rgba(19, 19, 19, 0.06);
+
+    --ft-card-padding: 32px;
+    --ft-radius-pill: 100px;
+    --ft-radius-lg: 20px;
+    --ft-radius-md: 12px;
+    --ft-grid-gap: 10px;
+
+    --ft-font: 'Gilroy', 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+    --ft-font-mono: 'Space Mono', 'Inconsolata', monospace;
+    --ft-speed: 0.25s;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  ::selection { background: var(--ft-purple-deep); color: #fff; }
+
+  body {
+    background: var(--bg-color);
+    color: var(--font-color);
+    font-family: var(--ft-font);
+    font-size: 16px;
+    line-height: 1.5;
+    letter-spacing: 0.02em;   /* brand: +0.02em on body */
+    min-height: 100vh;
+  }
+  h1, h2, h3 { letter-spacing: -0.02em; }  /* brand: -0.02em on headings */
+
+  .wrap { max-width: 1600px; margin: 0 auto; padding: 32px 32px 0; }
+
+  /* ── Header ───────────────────────────────────────────────────────── */
+  header {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    padding-bottom: 24px; margin-bottom: 20px;
+    border-bottom: 1px solid var(--stroke-color);
+  }
+  .logo { width: 46px; height: 48px; flex: none; color: var(--ft-black); transition: color var(--ft-speed) ease; }
+  .logo:hover { color: var(--ft-purple); }
+  .logo svg { width: 100%; height: 100%; display: block; }
+  .masthead h1 { font-size: 28px; font-weight: 700; }
+  .masthead .sub {
+    font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--ft-gray-300);
+  }
+  .head-meta { margin-left: auto; text-align: right; }
+  .head-meta .date { font-size: 17px; font-weight: 700; }
+  .head-meta .gen { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-300); }
+  .sources-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 3px solid var(--ft-black); border-radius: var(--ft-radius-pill);
+    padding: 8px 18px; font-weight: 700; font-size: 13px;
+    background: transparent; transition: all var(--ft-speed) ease;
+  }
+  .sources-pill:hover { border-color: var(--ft-purple); color: var(--ft-purple); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+  .dot.on  { background: var(--ft-purple); box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.18); }
+  .dot.off { background: var(--ft-gray-300); }
+
+  /* ── Grid & panels ────────────────────────────────────────────────── */
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: var(--ft-grid-gap); }
+  .panel {
+    grid-column: span 4;
+    background: var(--panel-color);
+    border: 1px solid var(--stroke-soft);
+    border-radius: var(--ft-radius-lg);
+    padding: var(--ft-card-padding);
+    display: flex; flex-direction: column;
+    min-height: 180px;
+  }
+  .panel.span-12 { grid-column: span 12; }
+  .panel.span-8  { grid-column: span 8; }
+  .panel.span-6  { grid-column: span 6; }
+  .panel.span-4  { grid-column: span 4; }
+  @media (max-width: 1200px) { .panel, .panel.span-4, .panel.span-6, .panel.span-8 { grid-column: span 6; } .panel.span-12 { grid-column: span 12; } }
+  @media (max-width: 680px)  { .panel, .panel.span-4, .panel.span-6, .panel.span-8, .panel.span-12 { grid-column: span 12; } }
+
+  .panel-head {
+    display: flex; align-items: baseline; gap: 12px;
+    padding-bottom: 14px; margin-bottom: 16px;
+    border-bottom: 1px solid var(--stroke-soft);
+  }
+  .panel-head h2 { font-size: 19px; font-weight: 700; }
+  .panel-head .src { font-family: var(--ft-font-mono); font-size: 11px; color: var(--ft-gray-300); }
+  .panel-head .status { margin-left: auto; display: flex; align-items: center; gap: 6px;
+    font-family: var(--ft-font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .status.on  { color: var(--ft-purple); }
+  .status.off { color: var(--ft-gray-300); }
+
+  .offline-body { flex: 1; display: grid; place-items: center; text-align: center; padding: 20px 10px; }
+  .offline-body .big {
+    font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.18em;
+    color: var(--ft-gray-300); font-weight: 700;
+  }
+  .offline-body .why { font-size: 14px; color: var(--ft-gray-300); margin-top: 8px; max-width: 380px; }
+
+  /* ── Briefing ─────────────────────────────────────────────────────── */
+  .brief-headline { font-size: clamp(25px, calc(20px + 1.25vw), 40px); font-weight: 700; line-height: 1.15; margin-bottom: 10px; max-width: 1100px; text-wrap: balance; }
+  .brief-summary  { color: var(--ft-gray-300); font-size: 17px; max-width: 72ch; margin-bottom: 22px; text-wrap: pretty; }
+  .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: var(--ft-grid-gap); }
+  .action {
+    border: 1px solid var(--stroke-soft); border-left: 4px solid var(--ft-purple);
+    border-radius: var(--ft-radius-md); padding: 18px 20px; background: var(--ft-beige);
+  }
+  .action.p1 { border-left-color: var(--ft-red); }
+  .action.p2 { border-left-color: var(--ft-orange); }
+  .action-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .pnum {
+    font-family: var(--ft-font-mono); font-size: 11px; font-weight: 700; flex: none;
+    border-radius: var(--ft-radius-pill); padding: 2px 10px;
+    background: #fff; border: 2px solid var(--ft-purple); color: var(--ft-purple);
+  }
+  .action.p1 .pnum { color: var(--ft-red); border-color: var(--ft-red); }
+  .action.p2 .pnum { color: var(--ft-orange); border-color: var(--ft-orange); }
+  .action-title { font-weight: 700; font-size: 17px; letter-spacing: -0.01em; }
+  .action-why { color: var(--ft-gray-300); font-size: 14.5px; margin-bottom: 10px; text-wrap: pretty; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    font-family: var(--ft-font-mono); font-size: 11px;
+    color: var(--ft-purple); background: rgba(76, 0, 255, 0.07);
+    border: 1px solid rgba(76, 0, 255, 0.35); border-radius: var(--ft-radius-pill);
+    padding: 2px 12px; transition: all var(--ft-speed) ease;
+  }
+  .chip:hover { background: var(--ft-purple); color: #fff; }
+  .watchlist { margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--stroke-color); }
+  .watchlist .wl-label {
+    font-family: var(--ft-font-mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ft-gray-300); margin-bottom: 8px;
+  }
+  .watchlist li { color: var(--ft-gray-300); font-size: 14.5px; margin: 5px 0 5px 20px; max-width: 100ch; text-wrap: pretty; }
+
+  /* ── Shared list rows ─────────────────────────────────────────────── */
+  .rows { display: flex; flex-direction: column; }
+  .row {
+    display: flex; gap: 14px; align-items: baseline;
+    padding: 9px 2px; border-bottom: 1px solid var(--stroke-soft);
+  }
+  .row:last-child { border-bottom: none; }
+  .row { transition: background var(--ft-speed) ease; border-radius: 6px; }
+  .row:hover { background: var(--input-bg); }
+  .row .when { font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-purple); flex: none; width: 88px; }
+  .row .main { flex: 1; min-width: 0; }
+  .row .t { font-weight: 700; font-size: 15px; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .d { font-size: 13.5px; color: var(--ft-gray-300); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row .d.wrap { white-space: normal; }
+  .row .end { flex: none; font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-gray-300); }
+  .flag {
+    flex: none; font-family: var(--ft-font-mono); font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-radius: var(--ft-radius-pill); padding: 2px 10px; align-self: center;
+  }
+  .flag.act  { color: #fff; background: var(--ft-red); }
+
+  .day-label {
+    font-family: var(--ft-font-mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ft-gray-300); margin: 12px 0 4px;
+  }
+  .day-label:first-child { margin-top: 0; }
+
+  /* ── KPI tiles ────────────────────────────────────────────────────── */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: var(--ft-grid-gap); margin-bottom: 16px; }
+  .kpi { border: 1px solid var(--stroke-soft); border-radius: var(--ft-radius-md); padding: 14px 16px; background: var(--ft-beige); }
+  .kpi .v { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi .v.good { color: var(--ft-purple); } .kpi .v.warn { color: var(--ft-orange); } .kpi .v.crit { color: var(--ft-red); }
+  .kpi .k {
+    font-family: var(--ft-font-mono); font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ft-gray-300); margin-top: 3px;
+  }
+
+  /* ── Bars (charts) — direct-labeled, purple identity ─────────────── */
+  .bar-row { display: grid; grid-template-columns: 96px 1fr 80px; gap: 12px; align-items: center; padding: 6px 0; }
+  .bar-row .bl { font-size: 13px; color: var(--ft-gray-300); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-track { height: 10px; background: var(--input-bg); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 0 5px 5px 0; background: var(--ft-purple); min-width: 2px; }
+  .bar-fill.warn { background: var(--ft-orange); } .bar-fill.crit { background: var(--ft-red); } .bar-fill.good { background: var(--ft-aqua); }
+  .bar-row .bv { font-family: var(--ft-font-mono); font-size: 12px; color: var(--ft-gray-300); text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* ── Footer status strip — footer is ALWAYS dark (brand rule) ─────── */
+  .status-strip {
+    margin: 24px -32px 0; padding: 26px 32px 30px;
+    background: var(--ft-black); color: #fff;
+    display: flex; flex-wrap: wrap; gap: 12px 26px; align-items: center;
+  }
+  .status-item { display: flex; align-items: center; gap: 7px; font-family: var(--ft-font-mono); font-size: 12px; color: rgba(255,255,255,0.85); }
+  .status-item .fetched { color: rgba(255,255,255,0.62); }
+  .status-item .dot.on { background: var(--ft-purple-soft); box-shadow: 0 0 0 3px rgba(138,111,255,0.25); }
+  .status-item .dot.off { background: rgba(255,255,255,0.3); }
+  .strip-label {
+    font-family: var(--ft-font-mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.66); margin-right: 6px;
+  }
+  .strip-tag {
+    margin-left: auto; font-weight: 700; font-size: 15px; letter-spacing: -0.01em;
+    color: #fff; font-family: var(--ft-font);
+  }
+  .strip-tag .grad {
+    background: var(--ft-gradient);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ── Living Board: data-arrival choreography (brand reveal ease) ──── */
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .panel { animation: rise-in 0.55s cubic-bezier(0.13, 0.6, 0.23, 0.98) both; animation-delay: var(--d, 0ms); }
+  .action { animation: rise-in 0.5s cubic-bezier(0.13, 0.6, 0.23, 0.98) both; animation-delay: var(--d, 0ms); }
+  .brief-headline { animation: rise-in 0.6s cubic-bezier(0.13, 0.6, 0.23, 0.98) 80ms both; }
+  .brief-summary  { animation: rise-in 0.6s cubic-bezier(0.13, 0.6, 0.23, 0.98) 160ms both; }
+  @keyframes dot-breathe {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(76, 0, 255, 0.18); }
+    50%      { box-shadow: 0 0 0 7px rgba(76, 0, 255, 0.06); }
+  }
+  .panel-head .dot.on, .sources-pill .dot.on { animation: dot-breathe 2.6s ease-in-out infinite; }
+  .bar-fill { transition: width 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+
+  .fatal {
+    margin: 60px auto; max-width: 560px; text-align: center;
+    border: 1px solid var(--stroke-color); border-radius: var(--ft-radius-lg);
+    background: var(--panel-color); padding: 48px 40px;
+  }
+  .fatal h2 { margin-bottom: 12px; }
+  .fatal p { color: var(--ft-gray-300); }
+  .fatal code { font-family: var(--ft-font-mono); color: var(--ft-purple); font-size: 13px; }
+
+  a { color: var(--ft-purple); text-decoration: none; transition: color var(--ft-speed) ease; }
+  a:hover { color: var(--ft-purple-deep); text-decoration: underline; }
+  :focus-visible { outline: 2px solid var(--ft-purple); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo" title="Fiction Tribe">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 67" fill="none" role="img" aria-label="Fiction Tribe">
+        <g fill="currentColor">
+          <path opacity="0.55" d="M31.939 42.5853L21.286 36.5151L31.939 30.4136L42.5892 36.5094L31.939 42.5882"/>
+          <path opacity="0.55" d="M42.5892 12.1831L31.9419 6.0873L21.286 0L10.6359 6.10432L21.286 12.1916L31.9419 18.2874L42.5892 24.3832L53.2365 18.2818L42.5892 12.1831Z"/>
+          <path opacity="0.55" d="M53.2365 30.4168L63.8837 24.3862L53.2365 18.2876V30.4168Z"/>
+          <path d="M10.6359 30.4168V6.10432L0 12.1888V36.5122L10.6359 42.5966V66.9201L21.286 60.8158V36.5122L10.6359 30.4168Z"/>
+          <path d="M53.2365 30.4167L42.5892 36.5093L42.5977 36.5122V60.8158L53.2365 66.9201V42.5966L63.8837 36.5122L53.2365 30.4167Z"/>
+        </g>
+      </svg>
+    </div>
+    <div class="masthead">
+      <h1>Mission Control</h1>
+      <div class="sub">Fiction Tribe &middot; CEO Action Board</div>
+    </div>
+    <div class="head-meta">
+      <div class="date" id="hdr-date"></div>
+      <div class="gen" id="hdr-gen"></div>
+    </div>
+    <div class="sources-pill" id="hdr-sources"><span class="dot on"></span><span>—</span></div>
+  </header>
+
+  <main class="grid" id="board"></main>
+
+  <footer class="status-strip" id="status-strip"></footer>
+</div>
+
+<script src="data/dashboard-data.js"></script>
+<script>
+'use strict';
+(function () {
+  // ── helpers ─────────────────────────────────────────────────────────
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) =>
+    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const num = (v) => (typeof v === 'number' && isFinite(v)) ? v : null;
+  const arr = (v) => Array.isArray(v) ? v : [];
+  const money = (v) => {
+    const n = num(v); if (n === null) return '—';
+    if (Math.abs(n) >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+    if (Math.abs(n) >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  };
+  const TZ = 'America/Los_Angeles'; // board renders in FT's home timezone everywhere
+  const shortDate = (s) => {
+    if (!s) return '—';
+    // Date-only strings are calendar dates, not instants — format them as-is
+    // (parsing would pin them to UTC midnight and shift a day in Pacific).
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s));
+    if (m) return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const d = new Date(s);
+    if (isNaN(d)) return esc(String(s).slice(0, 10));
+    return d.toLocaleDateString('en-US', { timeZone: TZ, month: 'short', day: 'numeric' });
+  };
+  const timeOf = (s) => {
+    const d = new Date(s);
+    if (isNaN(d)) return '—';
+    return d.toLocaleTimeString('en-US', { timeZone: TZ, hour: 'numeric', minute: '2-digit' }).replace(' ', '').toLowerCase();
+  };
+  const dayKey = (d) => d.toLocaleDateString('en-CA', { timeZone: TZ });
+  const dayLabel = (s) => {
+    const d = new Date(s);
+    if (isNaN(d)) return 'Upcoming';
+    const today = dayKey(new Date());
+    const that = dayKey(d);
+    if (that === today) return 'Today';
+    const diff = Math.round((new Date(that) - new Date(today)) / 86400000);
+    if (diff === 1) return 'Tomorrow';
+    return d.toLocaleDateString('en-US', { timeZone: TZ, weekday: 'long', month: 'short', day: 'numeric' });
+  };
+
+  // ── panel renderers (each receives envelope.data, already non-null) ─
+  const R = {};
+
+  R.briefing = (d) => {
+    const actions = arr(d.actions).map((a, i) => {
+      const p = num(a.priority) ?? (i + 1);
+      const cls = p === 1 ? 'p1' : p === 2 ? 'p2' : '';
+      const chips = arr(a.sources).map((s) => `<span class="chip">${esc(s)}</span>`).join('');
+      return `<div class="action ${cls}" style="--d:${220 + i * 60}ms">
+        <div class="action-top"><span class="pnum">P${p}</span><span class="action-title">${esc(a.title)}</span></div>
+        <div class="action-why">${esc(a.why)}${a.due ? ` <strong>Due: ${esc(a.due)}.</strong>` : ''}</div>
+        <div class="chips">${chips}</div>
+      </div>`;
+    }).join('');
+    const watch = arr(d.watchlist).length
+      ? `<div class="watchlist"><div class="wl-label">Watchlist</div><ul>` +
+        arr(d.watchlist).map((w) => `<li>${esc(w)}</li>`).join('') + `</ul></div>`
+      : '';
+    return `<div class="brief-headline">${esc(d.headline)}</div>
+      <div class="brief-summary">${esc(d.summary)}</div>
+      <div class="actions">${actions}</div>${watch}`;
+  };
+
+  R.calendar = (d) => {
+    const evs = arr(d.events);
+    if (!evs.length) return `<div class="offline-body"><div class="why">No events in range.</div></div>`;
+    let html = '<div class="rows">', lastDay = null;
+    for (const e of evs.slice(0, 14)) {
+      const dl = dayLabel(e.start);
+      if (dl !== lastDay) { html += `<div class="day-label">${esc(dl)}</div>`; lastDay = dl; }
+      html += `<div class="row">
+        <span class="when">${timeOf(e.start)}</span>
+        <div class="main"><div class="t">${esc(e.title)}</div></div>
+        ${num(e.attendees) ? `<span class="end">${e.attendees} ppl</span>` : ''}
+      </div>`;
+    }
+    return html + '</div>';
+  };
+
+  R.gmail = (d) => {
+    const ts = arr(d.threads);
+    if (!ts.length) return `<div class="offline-body"><div class="why">Inbox is clear.</div></div>`;
+    return '<div class="rows">' + ts.slice(0, 10).map((t) => `
+      <div class="row">
+        <div class="main">
+          <div class="t">${esc(t.subject)}</div>
+          <div class="d">${esc(t.from)}${t.snippet ? ' — ' + esc(t.snippet) : ''}</div>
+        </div>
+        ${t.needs_action ? '<span class="flag act">Action</span>' : ''}
+        <span class="end">${shortDate(t.date)}</span>
+      </div>`).join('') + '</div>';
+  };
+
+  R.tactiq = (d) => {
+    const ms = arr(d.meetings);
+    if (!ms.length) return `<div class="offline-body"><div class="why">No recent meetings.</div></div>`;
+    return '<div class="rows">' + ms.slice(0, 6).map((m) => {
+      const items = arr(m.action_items).slice(0, 5)
+        .map((a) => `<div class="d wrap">▸ ${esc(a)}</div>`).join('');
+      return `<div class="row">
+        <span class="when">${shortDate(m.date)}</span>
+        <div class="main">
+          <div class="t">${esc(m.title)}</div>
+          ${m.summary ? `<div class="d wrap">${esc(m.summary)}</div>` : ''}
+          ${items}
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+  };
+
+  R.snitcher = (d) => {
+    const orgs = arr(d.organisations);
+    if (!orgs.length) return `<div class="offline-body"><div class="why">No identified visitors in range.</div></div>`;
+    const max = Math.max(1, ...orgs.map((o) => num(o.pageviews) ?? num(o.sessions) ?? 0));
+    return '<div class="rows">' + orgs.slice(0, 9).map((o) => {
+      const v = num(o.pageviews) ?? num(o.sessions) ?? 0;
+      const signals = arr(o.signals).slice(0, 2).join(' · ');
+      return `<div class="row">
+        <div class="main">
+          <div class="t">${esc(o.name)}</div>
+          <div class="d">${esc([o.industry, signals].filter(Boolean).join(' — '))}</div>
+        </div>
+        <div style="flex:none;width:110px" title="${v} sessions">
+          <div class="bar-track"><div class="bar-fill" data-w="${Math.max(3, Math.round(v / max * 100))}%" style="width:2px"></div></div>
+        </div>
+        <span class="end">${shortDate(o.last_visit)}</span>
+      </div>`;
+    }).join('') + '</div>';
+  };
+
+  R.hubspot = (d) => {
+    const deals = arr(d.deals);
+    const kpis = `<div class="kpis">
+      <div class="kpi"><div class="v" data-count="${num(d.open_deal_count) ?? deals.length}" data-fmt="int">${num(d.open_deal_count) ?? deals.length}</div><div class="k">Open deals</div></div>
+      <div class="kpi"><div class="v good" ${num(d.pipeline_value) !== null ? `data-count="${d.pipeline_value}" data-fmt="money"` : ''}>${money(d.pipeline_value)}</div><div class="k">Pipeline value</div></div>
+      ${num(d.contact_count) !== null ? `<div class="kpi"><div class="v" data-count="${d.contact_count}" data-fmt="int">${d.contact_count.toLocaleString('en-US')}</div><div class="k">CRM contacts</div></div>` : ''}
+    </div>`;
+    if (!deals.length) return kpis + `<div class="offline-body"><div class="why">${esc(d.note || 'No open deals returned.')}</div></div>`;
+    const max = Math.max(1, ...deals.map((x) => num(x.amount) ?? 0));
+    const rows = deals.slice(0, 10).map((x) => `
+      <div class="bar-row" title="${esc(x.stage)}">
+        <span class="bl">${esc(x.name)}</span>
+        <div class="bar-track"><div class="bar-fill" data-w="${Math.max(3, Math.round((num(x.amount) ?? 0) / max * 100))}%" style="width:2px"></div></div>
+        <span class="bv">${money(x.amount)}</span>
+      </div>
+      <div class="d" style="font-size:11px;color:var(--ft-gray-300);margin:-3px 0 4px 2px">${esc(x.stage)}${x.close_date ? ' · closes ' + shortDate(x.close_date) : ''}</div>`).join('');
+    return kpis + rows;
+  };
+
+  R.quickbooks = (d) => {
+    let html = '';
+    const p = d.pnl;
+    if (p && typeof p === 'object') {
+      const net = num(p.net);
+      html += `<div class="kpis">
+        <div class="kpi"><div class="v" ${num(p.income) !== null ? `data-count="${p.income}" data-fmt="money"` : ''}>${money(p.income)}</div><div class="k">Income · ${esc(p.period || '')}</div></div>
+        <div class="kpi"><div class="v" ${num(p.expenses) !== null ? `data-count="${p.expenses}" data-fmt="money"` : ''}>${money(p.expenses)}</div><div class="k">Expenses</div></div>
+        <div class="kpi"><div class="v ${net === null ? '' : net >= 0 ? 'good' : 'crit'}" ${net !== null ? `data-count="${net}" data-fmt="money"` : ''}>${money(p.net)}</div><div class="k">Net</div></div>
+      </div>`;
+    }
+    const ar = d.ar_aging;
+    if (ar && typeof ar === 'object') {
+      const buckets = [
+        ['Current', ar.current, ''], ['1–30 d', ar.d1_30, ''], ['31–60 d', ar.d31_60, 'warn'],
+        ['61–90 d', ar.d61_90, 'warn'], ['90+ d', ar.d90_plus, 'crit'],
+      ];
+      const max = Math.max(1, ...buckets.map(([, v]) => num(v) ?? 0));
+      html += `<div class="day-label">Receivables aging · total ${money(ar.total)}</div>` +
+        buckets.map(([l, v, cls]) => `
+          <div class="bar-row">
+            <span class="bl">${l}</span>
+            <div class="bar-track"><div class="bar-fill ${cls}" data-w="${Math.max(2, Math.round((num(v) ?? 0) / max * 100))}%" style="width:2px"></div></div>
+            <span class="bv">${money(v)}</span>
+          </div>`).join('');
+    }
+    const inv = arr(d.invoices);
+    if (inv.length) {
+      html += `<div class="day-label" style="margin-top:14px">Open invoices</div><div class="rows">` +
+        inv.slice(0, 6).map((i) => `
+          <div class="row">
+            <div class="main"><div class="t">${esc(i.customer)}</div><div class="d">${esc(i.status)}${i.due ? ' · due ' + shortDate(i.due) : ''}</div></div>
+            <span class="end">${money(i.amount)}</span>
+          </div>`).join('') + '</div>';
+    }
+    return html || `<div class="offline-body"><div class="why">No finance figures returned.</div></div>`;
+  };
+
+  R.apollo = (d) => {
+    let html = '';
+    const tasks = arr(d.tasks);
+    if (tasks.length) {
+      html += '<div class="rows">' + tasks.slice(0, 8).map((t) => `
+        <div class="row">
+          <div class="main"><div class="t">${esc(t.title)}</div>
+          <div class="d">${esc([t.contact, t.company].filter(Boolean).join(' · '))}</div></div>
+          <span class="end">${shortDate(t.due)}</span>
+        </div>`).join('') + '</div>';
+    }
+    const camps = arr(d.campaigns);
+    if (camps.length) {
+      html += `<div class="day-label" style="margin-top:12px">Sequences</div><div class="chips">` +
+        camps.slice(0, 6).map((c) => `<span class="chip">${esc(c.name)}</span>`).join('') + '</div>';
+    }
+    return html || `<div class="offline-body"><div class="why">No outbound tasks returned.</div></div>`;
+  };
+
+  R.drive = (d) => {
+    const fs = arr(d.files);
+    if (!fs.length) return `<div class="offline-body"><div class="why">No recent files.</div></div>`;
+    return '<div class="rows">' + fs.slice(0, 9).map((f) => `
+      <div class="row">
+        <div class="main">
+          <div class="t">${f.link ? `<a href="${esc(f.link)}" target="_blank" rel="noopener">${esc(f.name)}</a>` : esc(f.name)}</div>
+          <div class="d">${esc([f.type, f.modified_by].filter(Boolean).join(' · '))}</div>
+        </div>
+        <span class="end">${shortDate(f.modified)}</span>
+      </div>`).join('') + '</div>';
+  };
+
+  // ── layout spans per source ─────────────────────────────────────────
+  const SPAN = { briefing: 'span-12', calendar: 'span-4', gmail: 'span-8', tactiq: 'span-6',
+                 snitcher: 'span-6', hubspot: 'span-6', quickbooks: 'span-6', apollo: 'span-4', drive: 'span-8' };
+  const ORDER = ['briefing', 'calendar', 'gmail', 'tactiq', 'snitcher', 'hubspot', 'quickbooks', 'apollo', 'drive'];
+
+  function panelHTML(env, idx) {
+    const on = env.status === 'online';
+    let body;
+    if (on) {
+      try {
+        body = (R[env.source] || (() => ''))(env.data || {});
+        if (!body) body = `<div class="offline-body"><div class="why">Renderer returned nothing.</div></div>`;
+      } catch (e) {
+        body = `<div class="offline-body"><div class="big">RENDER ERROR</div><div class="why">${esc(e.message)}</div></div>`;
+      }
+    } else {
+      body = `<div class="offline-body">
+        <div class="big">SOURCE OFFLINE</div>
+        <div class="why">${esc(env.error || 'No data available.')}</div>
+      </div>`;
+    }
+    return `<section class="panel ${SPAN[env.source] || 'span-4'}" data-panel="${esc(env.source)}" style="--d:${idx * 70}ms">
+      <div class="panel-head">
+        <h2>${esc(env.label)}</h2><span class="src">${esc(env.source)}</span>
+        <span class="status ${on ? 'on' : 'off'}"><span class="dot ${on ? 'on' : 'off'}"></span>${on ? 'Live' : 'Offline'}</span>
+      </div>
+      ${body}
+    </section>`;
+  }
+
+  // ── boot ────────────────────────────────────────────────────────────
+  const board = document.getElementById('board');
+  document.getElementById('hdr-date').textContent =
+    new Date().toLocaleDateString('en-US', { timeZone: TZ, weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  const MC = window.MISSION_CONTROL;
+  if (!MC || typeof MC !== 'object' || !MC.sources) {
+    board.innerHTML = '';
+    document.querySelector('.wrap').insertAdjacentHTML('beforeend', `
+      <div class="fatal">
+        <h2>NO DATA LOADED</h2>
+        <p>Could not read <code>data/dashboard-data.js</code>.</p>
+        <p style="margin-top:10px">Run <code>node scripts/build-data.js</code> (or the <code>refresh-dashboard</code> skill) and reload.</p>
+      </div>`);
+    document.getElementById('status-strip').style.display = 'none';
+    return;
+  }
+
+  const gen = MC.generated_at ? new Date(MC.generated_at) : null;
+  document.getElementById('hdr-gen').textContent = gen && !isNaN(gen)
+    ? 'data refreshed ' + gen.toLocaleString('en-US', { timeZone: TZ, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
+    : '';
+
+  const envs = ORDER.map((k) => MC.sources[k]).filter(Boolean);
+  const onCount = envs.filter((e) => e.status === 'online').length;
+  document.getElementById('hdr-sources').innerHTML =
+    `<span class="dot ${onCount ? 'on' : 'off'}"></span><span>${onCount}/${envs.length} sources live</span>`;
+
+  board.innerHTML = envs.map(panelHTML).join('');
+
+  // Living Board: fill bars and count up KPIs after paint. Failures here must
+  // never break the board — everything lands on final values regardless.
+  try {
+    const still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const bars = document.querySelectorAll('.bar-fill[data-w]');
+    if (still) {
+      bars.forEach((el) => { el.style.transition = 'none'; el.style.width = el.dataset.w; });
+    } else {
+      requestAnimationFrame(() => requestAnimationFrame(() =>
+        bars.forEach((el, i) => { el.style.transitionDelay = `${300 + i * 45}ms`; el.style.width = el.dataset.w; })));
+    }
+    document.querySelectorAll('.kpi .v[data-count]').forEach((el) => {
+      const target = Number(el.dataset.count);
+      if (!isFinite(target)) return;
+      const fmt = el.dataset.fmt === 'money' ? money : (n) => Math.round(n).toLocaleString('en-US');
+      if (still) { el.textContent = fmt(target); return; }
+      const t0 = performance.now(), dur = 750;
+      const tick = (t) => {
+        const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = fmt(target * e);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  } catch (e) { /* motion is optional; data is not */ }
+
+  document.getElementById('status-strip').innerHTML =
+    `<span class="strip-label">Source telemetry</span>` +
+    envs.map((e) => `<span class="status-item">
+      <span class="dot ${e.status === 'online' ? 'on' : 'off'}"></span>${esc(e.source)}
+      <span class="fetched">${e.fetched_at ? shortDate(e.fetched_at) + ' ' + timeOf(e.fetched_at) : 'never'}</span>
+    </span>`).join('') +
+    `<span class="strip-tag">Think Fast. <span class="grad">Create Faster.</span></span>`;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# This PUBLIC repo carries code only. Live dashboard data, screenshots, and
+# bundles live in the PRIVATE jamesrice/mission-control repo — never here.
+data/sources/
+data/dashboard-data.js
+screenshots/
+dist/
+node_modules/
+fonts/
