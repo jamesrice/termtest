@@ -6,3 +6,6 @@ screenshots/
 dist/
 node_modules/
 fonts/
+
+# Personal Claude Code permission overrides (git commit/push allow-rules)
+.claude/settings.local.json
